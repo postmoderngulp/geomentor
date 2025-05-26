@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,6 +27,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Session? session = Supabase.instance.client.auth.currentSession;
+    User? user = Supabase.instance.client.auth.currentUser;
+    debugPrint(user?.userMetadata?['role']);
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       child: MaterialApp(

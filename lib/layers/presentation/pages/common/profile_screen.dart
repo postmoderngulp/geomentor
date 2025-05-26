@@ -93,7 +93,7 @@ class _ActionBarState extends State<ActionBar> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: 2,
+      length: 1,
       vsync: this,
     );
   }
@@ -126,15 +126,19 @@ class _ActionBarState extends State<ActionBar> with TickerProviderStateMixin {
               Tab(
                 text: "Избранное",
               ),
-              Tab(
-                text: "Мои места",
-              ),
+              // Tab(
+              //   text: "Мои места",
+              // ),
             ]),
         SizedBox(
           height: 500.h,
           child: TabBarView(
             controller: _tabController,
-            children: const <Widget>[Favorites(), MyPlaces()],
+            children: const <Widget>[
+              Favorites(),
+
+              // MyPlaces()
+            ],
           ),
         ),
       ],
@@ -251,9 +255,14 @@ class FavoritesItem extends StatelessWidget {
                 SizedBox(
                   width: 15.w,
                 ),
-                Text(
-                  notifier.myFavorites[index].name_ru,
-                  style: MyFontStyle.littleSubTitle,
+                SizedBox(
+                  width: 120.w,
+                  child: Text(
+                    notifier.myFavorites[index].name_ru,
+                    style: MyFontStyle.littleSubTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),

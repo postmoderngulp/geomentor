@@ -57,6 +57,9 @@ class _SubHomeScreenState extends State<SubHomeScreen>
                   height: 30.h,
                 ),
                 const PLants(),
+                SizedBox(
+                  height: 70.h,
+                ),
               ],
             ),
           ),
@@ -114,7 +117,8 @@ class PLantsItem extends StatelessWidget {
             decoration: BoxDecoration(
                 color: MyColors.brandColor,
                 image: DecorationImage(
-                    image: NetworkImage("https://ybtmhmcuudcbiojupcnw.supabase.co/storage/v1/object/public/images//${notifier.plants[index].image}"),
+                    image: NetworkImage(
+                        "https://ybtmhmcuudcbiojupcnw.supabase.co/storage/v1/object/public/images//${notifier.plants[index].image}"),
                     fit: BoxFit.cover),
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(25),

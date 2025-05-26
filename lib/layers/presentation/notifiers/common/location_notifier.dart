@@ -2,23 +2,27 @@ import 'package:flutter/foundation.dart';
 import 'package:geolog/layers/data/source/supabase_source.dart';
 import 'package:geolog/layers/domain/entities/geo_deposit.dart';
 import 'package:geolog/layers/domain/entities/locate.dart';
+import 'package:geolog/layers/domain/entities/plant.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class LocationNotifier extends ChangeNotifier {
   Locate? deposit;
-  Uint8List? depositImage;
   List<Locate> deposits = [];
   List<GeoDeposit> myPlaces = [];
   YandexMapController? controller;
+  int plantId = 0;
+  Plant? plant;
+  
 
-  LocationNotifier() {
+  LocationNotifier(int idPlant) {
+    plantId = idPlant;
+    notifyListeners();
     _setup();
   }
 
   void _setup() async {
     SupabaseSource source = SupabaseSource();
-    deposits = await source.getDeposits();
-    // myPlaces =  await source.getMyPLaces();
+    deposits = await source.getDeposits(plantId);
     for (int i = 0; i < deposits.length; i++) {
       points.add(
         PlacemarkMapObject(
@@ -33,7 +37,7 @@ class LocationNotifier extends ChangeNotifier {
                     deposits[i].geo_point!.coordinates[1] ==
                         deposits[i].geo_point!.coordinates[1]) {
                   deposit = deposits[i];
-                  depositImage = await source.downloadAsset('images', '1.jpg');
+                  plant = await source.getPlant(plantId);
                   notifyListeners();
                 }
               }
@@ -54,7 +58,7 @@ class LocationNotifier extends ChangeNotifier {
 
   void close() {
     deposit = null;
-    depositImage = null;
+    plant = null;
     notifyListeners();
   }
 

@@ -1,22 +1,29 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: collection_methods_unrelated_type
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolog/layers/presentation/notifiers/common/location_notifier.dart';
-import 'package:geolog/layers/presentation/style/colors.dart';
-import 'package:geolog/layers/presentation/style/fontstyle.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
+import 'package:geolog/layers/presentation/notifiers/common/location_notifier.dart';
+import 'package:geolog/layers/presentation/style/colors.dart';
+import 'package:geolog/layers/presentation/style/fontstyle.dart';
+
 class LocationScreen extends StatelessWidget {
-  const LocationScreen({super.key});
+  int plantId;
+
+  LocationScreen({
+    super.key,
+    required this.plantId,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LocationNotifier(),
+      create: (context) => LocationNotifier(plantId),
       child: const SubLocationScreen(),
     );
   }
@@ -50,6 +57,17 @@ class SubLocationScreen extends StatelessWidget {
                   () => EagerGestureRecognizer(),
                 ),
               },
+            ),
+            GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: Padding(
+                padding: EdgeInsets.only(left: 16.w, top: 16.h),
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.black,
+                  size: 30.w,
+                ),
+              ),
             ),
             notifier.deposit != null
                 ? Align(
@@ -150,22 +168,10 @@ class SubLocationScreen extends StatelessWidget {
                                           borderRadius:
                                               BorderRadius.circular(15),
                                           image: DecorationImage(
-                                              image: MemoryImage(notifier
-                                                  .depositImage as Uint8List),
+                                              image: NetworkImage(
+                                                  "https://ybtmhmcuudcbiojupcnw.supabase.co/storage/v1/object/public/images//${notifier.plant!.image}"),
                                               fit: BoxFit.cover)),
                                     ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 15.h,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 24.w,
-                                  ),
-                                  child: Text(
-                                    '${notifier.deposit!.geo_point!.coordinates[1]}° с. ш., ${notifier.deposit!.geo_point!.coordinates.first}° в. д',
-                                    style: MyFontStyle.littleSubTitle,
                                   ),
                                 ),
                                 SizedBox(
@@ -191,7 +197,31 @@ class SubLocationScreen extends StatelessWidget {
                                     notifier.deposit!.region,
                                     style: MyFontStyle.littleSubTitle,
                                   ),
-                                )
+                                ),
+                                SizedBox(
+                                  height: 15.h,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 24.w,
+                                  ),
+                                  child: Text(
+                                    "Описание:",
+                                    style: MyFontStyle.littleSubTitle,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10.h,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 24.w,
+                                  ),
+                                  child: Text(
+                                    notifier.deposit!.description,
+                                    style: MyFontStyle.littleSubTitle,
+                                  ),
+                                ),
                               ],
                             ),
                           ),

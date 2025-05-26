@@ -1,13 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, camel_case_types
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolog/layers/presentation/pages/common/create_plant_page.dart';
 
 import 'package:geolog/layers/presentation/pages/common/home_screen.dart';
-import 'package:geolog/layers/presentation/pages/common/location_screen.dart';
 import 'package:geolog/layers/presentation/pages/common/profile_screen.dart';
-import 'package:geolog/layers/presentation/pages/common/scanner_screen.dart';
+import 'package:geolog/layers/presentation/style/colors.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 // ignore: must_be_immutable
 class MainPage extends StatefulWidget {
@@ -34,8 +36,6 @@ class _mainSreenCompanyState extends State<MainPage>
     _index = 0;
     _screens = [
       const HomeScreen(),
-      const LocationScreen(),
-      const ScannerScreen(),
       const ProfileScreen()
     ];
     _pageController = PageController(initialPage: _index);
@@ -55,6 +55,30 @@ class _mainSreenCompanyState extends State<MainPage>
       color: Colors.black,
       child: SafeArea(
         child: Scaffold(
+          floatingActionButton: Supabase.instance.client.auth.currentUser!
+                      .userMetadata?['role'] ==
+                  "admin"
+              ? GestureDetector(
+                  onTap: () => Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => const CreatePlantPage())),
+                  child: Container(
+                    width: 48.w,
+                    height: 48.h,
+                    decoration: BoxDecoration(
+                        color: MyColors.brandColor,
+                        borderRadius: BorderRadius.circular(15.w)),
+                    child: Center(
+                      child: Icon(
+                        Icons.add,
+                        size: 32.w,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox(),
           backgroundColor: Colors.black,
           body: PageView(
             controller: _pageController,
@@ -90,36 +114,10 @@ class _mainSreenCompanyState extends State<MainPage>
                   label: 'Главная',
                 ),
                 BottomNavigationBarItem(
-                  icon: SizedBox(
-                    width: 22.w,
-                    height: 22.h,
-                    child: SvgPicture.asset(
-                      'assets/image/location.svg',
-                      colorFilter: ColorFilter.mode(
-                          widget.selectIndex == 1 ? Colors.white : Colors.white,
-                          BlendMode.srcIn),
-                    ),
-                  ),
-                  label: 'Профиль',
-                ),
-                BottomNavigationBarItem(
-                  icon: SizedBox(
-                    width: 22.w,
-                    height: 22.h,
-                    child: SvgPicture.asset(
-                      'assets/image/scan.svg',
-                      colorFilter: ColorFilter.mode(
-                          widget.selectIndex == 2 ? Colors.white : Colors.white,
-                          BlendMode.srcIn),
-                    ),
-                  ),
-                  label: 'Сканнер',
-                ),
-                BottomNavigationBarItem(
                   icon: SvgPicture.asset(
                     'assets/image/profile.svg',
                     colorFilter: ColorFilter.mode(
-                        widget.selectIndex == 3 ? Colors.white : Colors.white,
+                        widget.selectIndex == 2 ? Colors.white : Colors.white,
                         BlendMode.srcIn),
                   ),
                   label: 'Профиль',

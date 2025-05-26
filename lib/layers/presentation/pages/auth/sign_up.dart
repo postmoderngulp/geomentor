@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolog/layers/presentation/notifiers/auth_notifiers/sign_up_notifier.dart';
 import 'package:geolog/layers/presentation/pages/auth/sign_in.dart';
+import 'package:geolog/layers/presentation/pages/common/toast.dart';
 import 'package:geolog/layers/presentation/style/colors.dart';
 import 'package:geolog/layers/presentation/style/fontstyle.dart';
 import 'package:provider/provider.dart';
@@ -94,8 +96,19 @@ class SignUpButton extends StatelessWidget {
         width: 280.w,
         height: 50.h,
         child: ElevatedButton(
-          onPressed: () => notifier.signUp(
-              notifier.email, notifier.nickname, notifier.password, context),
+          onPressed: () {
+            if (notifier.email.isEmpty || notifier.password.isEmpty) {
+              FToast fToast = FToast();
+              fToast.init(context);
+              fToast.showToast(
+                  gravity: ToastGravity.TOP,
+                  toastDuration: const Duration(seconds: 2),
+                  child: toast("Все поля должны быть заполнены", context));
+            } else {
+              notifier.signUp(notifier.email, notifier.nickname,
+                  notifier.password, context);
+            }
+          },
           style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(MyColors.brandColor),
               shape: WidgetStatePropertyAll(RoundedRectangleBorder(
